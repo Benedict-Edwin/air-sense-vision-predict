@@ -38,7 +38,18 @@ const EDA: React.FC<EDAProps> = ({ data }) => {
 
   // Prepare histogram data for PM2.5
   const preparePM25Histogram = () => {
-    const values = data.map(row => row.PM25);
+    // Check if data is empty to prevent errors
+    if (!data || data.length === 0) {
+      return [];
+    }
+    
+    const values = data.map(row => row.PM25).filter(val => val !== undefined && val !== null);
+    
+    // If no valid values, return empty array
+    if (values.length === 0) {
+      return [];
+    }
+    
     const min = Math.min(...values);
     const max = Math.max(...values);
     const range = max - min;
@@ -55,11 +66,13 @@ const EDA: React.FC<EDAProps> = ({ data }) => {
     
     // Count values in each bin
     values.forEach(value => {
-      const binIndex = Math.min(
-        binCount - 1,
-        Math.floor((value - min) / binWidth)
-      );
-      bins[binIndex].count++;
+      if (value !== undefined && value !== null) {
+        const binIndex = Math.min(
+          binCount - 1,
+          Math.floor((value - min) / binWidth)
+        );
+        bins[binIndex].count++;
+      }
     });
     
     return bins;
@@ -67,7 +80,18 @@ const EDA: React.FC<EDAProps> = ({ data }) => {
 
   // Prepare histogram data for PM10
   const preparePM10Histogram = () => {
-    const values = data.map(row => row.PM10);
+    // Check if data is empty to prevent errors
+    if (!data || data.length === 0) {
+      return [];
+    }
+    
+    const values = data.map(row => row.PM10).filter(val => val !== undefined && val !== null);
+    
+    // If no valid values, return empty array
+    if (values.length === 0) {
+      return [];
+    }
+    
     const min = Math.min(...values);
     const max = Math.max(...values);
     const range = max - min;
@@ -84,11 +108,13 @@ const EDA: React.FC<EDAProps> = ({ data }) => {
     
     // Count values in each bin
     values.forEach(value => {
-      const binIndex = Math.min(
-        binCount - 1,
-        Math.floor((value - min) / binWidth)
-      );
-      bins[binIndex].count++;
+      if (value !== undefined && value !== null) {
+        const binIndex = Math.min(
+          binCount - 1,
+          Math.floor((value - min) / binWidth)
+        );
+        bins[binIndex].count++;
+      }
     });
     
     return bins;
@@ -96,7 +122,18 @@ const EDA: React.FC<EDAProps> = ({ data }) => {
 
   // Prepare histogram data for NO2
   const prepareNO2Histogram = () => {
-    const values = data.map(row => row.NO2);
+    // Check if data is empty to prevent errors
+    if (!data || data.length === 0) {
+      return [];
+    }
+    
+    const values = data.map(row => row.NO2).filter(val => val !== undefined && val !== null);
+    
+    // If no valid values, return empty array
+    if (values.length === 0) {
+      return [];
+    }
+    
     const min = Math.min(...values);
     const max = Math.max(...values);
     const range = max - min;
@@ -113,11 +150,13 @@ const EDA: React.FC<EDAProps> = ({ data }) => {
     
     // Count values in each bin
     values.forEach(value => {
-      const binIndex = Math.min(
-        binCount - 1,
-        Math.floor((value - min) / binWidth)
-      );
-      bins[binIndex].count++;
+      if (value !== undefined && value !== null) {
+        const binIndex = Math.min(
+          binCount - 1,
+          Math.floor((value - min) / binWidth)
+        );
+        bins[binIndex].count++;
+      }
     });
     
     return bins;
