@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -54,6 +55,11 @@ const EDA: React.FC<EDAProps> = ({ data }) => {
     const max = Math.max(...values);
     const range = max - min;
     
+    // Return empty array if range is invalid
+    if (!range || isNaN(range) || range <= 0) {
+      return [];
+    }
+    
     // Create 10 bins
     const binCount = 10;
     const binWidth = range / binCount;
@@ -71,7 +77,9 @@ const EDA: React.FC<EDAProps> = ({ data }) => {
           binCount - 1,
           Math.floor((value - min) / binWidth)
         );
-        bins[binIndex].count++;
+        if (bins[binIndex]) {  // Check if bin exists before incrementing count
+          bins[binIndex].count++;
+        }
       }
     });
     
@@ -96,6 +104,11 @@ const EDA: React.FC<EDAProps> = ({ data }) => {
     const max = Math.max(...values);
     const range = max - min;
     
+    // Return empty array if range is invalid
+    if (!range || isNaN(range) || range <= 0) {
+      return [];
+    }
+    
     // Create 10 bins
     const binCount = 10;
     const binWidth = range / binCount;
@@ -113,7 +126,9 @@ const EDA: React.FC<EDAProps> = ({ data }) => {
           binCount - 1,
           Math.floor((value - min) / binWidth)
         );
-        bins[binIndex].count++;
+        if (bins[binIndex]) {  // Check if bin exists before incrementing count
+          bins[binIndex].count++;
+        }
       }
     });
     
@@ -138,6 +153,11 @@ const EDA: React.FC<EDAProps> = ({ data }) => {
     const max = Math.max(...values);
     const range = max - min;
     
+    // Return empty array if range is invalid
+    if (!range || isNaN(range) || range <= 0) {
+      return [];
+    }
+    
     // Create 10 bins
     const binCount = 10;
     const binWidth = range / binCount;
@@ -155,7 +175,9 @@ const EDA: React.FC<EDAProps> = ({ data }) => {
           binCount - 1,
           Math.floor((value - min) / binWidth)
         );
-        bins[binIndex].count++;
+        if (bins[binIndex]) {  // Check if bin exists before incrementing count
+          bins[binIndex].count++;
+        }
       }
     });
     
@@ -172,14 +194,16 @@ const EDA: React.FC<EDAProps> = ({ data }) => {
         if (!monthlyData[month]) {
           monthlyData[month] = { month, avgAQI: 0, count: 0 };
         }
-        monthlyData[month].avgAQI += row.AQI;
-        monthlyData[month].count++;
+        if (row.AQI !== undefined && row.AQI !== null) {
+          monthlyData[month].avgAQI += row.AQI;
+          monthlyData[month].count++;
+        }
       }
     });
     
     return Object.values(monthlyData).map(item => ({
       month: item.month,
-      avgAQI: item.avgAQI / item.count
+      avgAQI: item.count > 0 ? item.avgAQI / item.count : 0
     }));
   };
 
@@ -209,10 +233,13 @@ const EDA: React.FC<EDAProps> = ({ data }) => {
 
   // Prepare data for scatter plot (PM2.5 vs AQI)
   const prepareScatterData = () => {
-    return data.map(row => ({
-      PM25: row.PM25,
-      AQI: row.AQI
-    }));
+    return data
+      .filter(row => row.PM25 !== undefined && row.PM25 !== null && 
+                     row.AQI !== undefined && row.AQI !== null)
+      .map(row => ({
+        PM25: row.PM25,
+        AQI: row.AQI
+      }));
   };
 
   // Helper function to get color based on correlation value
