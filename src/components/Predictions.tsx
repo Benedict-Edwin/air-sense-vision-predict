@@ -17,8 +17,12 @@ import {
   Scatter,
   BarChart,
   Bar,
-  ReferenceLine
+  ReferenceLine,
+  TooltipProps
 } from "recharts";
+
+// Import necessary types for Recharts
+import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
 
 interface PredictionsProps {
   randomForestResults: ModelResults;
@@ -63,6 +67,14 @@ const Predictions: React.FC<PredictionsProps> = ({ randomForestResults, xgboostR
     return residuals.reduce((sum, val) => sum + val, 0) / residuals.length;
   };
 
+  // Helper function to safely format tooltip values
+  const formatTooltipValue = (value: ValueType) => {
+    if (typeof value === 'number') {
+      return value.toFixed(2);
+    }
+    return value;
+  };
+
   return (
     <Card className="w-full">
       <CardHeader>
@@ -101,7 +113,9 @@ const Predictions: React.FC<PredictionsProps> = ({ randomForestResults, xgboostR
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="index" label={{ value: 'Test Sample Index', position: 'insideBottom', offset: -5 }} />
                   <YAxis label={{ value: 'AQI Value', angle: -90, position: 'insideLeft' }} />
-                  <Tooltip formatter={(value) => [value.toFixed(2), '']} />
+                  <Tooltip formatter={(value: ValueType) => {
+                    return [typeof value === 'number' ? value.toFixed(2) : value, ''];
+                  }} />
                   <Legend />
                   <Line
                     type="monotone"
@@ -149,7 +163,9 @@ const Predictions: React.FC<PredictionsProps> = ({ randomForestResults, xgboostR
                   />
                   <Tooltip
                     cursor={{ strokeDasharray: '3 3' }}
-                    formatter={(value) => [`${value.toFixed(2)}`, '']}
+                    formatter={(value: ValueType) => {
+                      return [typeof value === 'number' ? value.toFixed(2) : value, ''];
+                    }}
                   />
                   <ReferenceLine y={0} stroke="#666" />
                   <ReferenceLine
@@ -192,7 +208,9 @@ const Predictions: React.FC<PredictionsProps> = ({ randomForestResults, xgboostR
                   />
                   <Tooltip
                     cursor={{ strokeDasharray: '3 3' }}
-                    formatter={(value) => [`${value.toFixed(2)}`, '']}
+                    formatter={(value: ValueType) => {
+                      return [typeof value === 'number' ? value.toFixed(2) : value, ''];
+                    }}
                   />
                   <ReferenceLine y={0} stroke="#666" />
                   <ReferenceLine
@@ -252,7 +270,9 @@ const Predictions: React.FC<PredictionsProps> = ({ randomForestResults, xgboostR
                     dataKey="feature"
                     tick={{ fontSize: 12 }}
                   />
-                  <Tooltip formatter={(value) => [`${(value * 100).toFixed(1)}%`, 'Importance']} />
+                  <Tooltip formatter={(value: ValueType) => {
+                    return [typeof value === 'number' ? `${(value * 100).toFixed(1)}%` : value, 'Importance'];
+                  }} />
                   <Bar
                     dataKey="importance"
                     name="Importance"

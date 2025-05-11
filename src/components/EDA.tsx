@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -17,8 +16,12 @@ import {
   Line,
   ScatterChart,
   Scatter,
-  Cell
+  Cell,
+  TooltipProps
 } from "recharts";
+
+// Import necessary types for Recharts
+import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
 
 interface EDAProps {
   data: ProcessedData[];
@@ -184,6 +187,14 @@ const EDA: React.FC<EDAProps> = ({ data }) => {
     return "#f87171"; // Red for strong negative
   };
 
+  // Helper function to safely format tooltip values
+  const formatTooltipValue = (value: ValueType) => {
+    if (typeof value === 'number') {
+      return value.toFixed(2);
+    }
+    return value;
+  };
+
   return (
     <Card className="w-full">
       <CardHeader>
@@ -326,10 +337,12 @@ const EDA: React.FC<EDAProps> = ({ data }) => {
                   />
                   <YAxis />
                   <Tooltip 
-                    formatter={(value) => [`${value.toFixed(2)}`, 'Average AQI']}
+                    formatter={(value: ValueType) => {
+                      return [typeof value === 'number' ? value.toFixed(2) : value, 'Average AQI'];
+                    }}
                     labelFormatter={(month) => {
                       const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-                      return monthNames[month - 1];
+                      return monthNames[Number(month) - 1];
                     }}
                   />
                   <Legend />

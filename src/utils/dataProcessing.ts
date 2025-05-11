@@ -79,7 +79,7 @@ export const imputeMissingValues = (data: AirQualityData[]): AirQualityData[] =>
     numericColumns.forEach(column => {
       const key = column as keyof AirQualityData;
       if (newRow[key] === null || newRow[key] === undefined || isNaN(Number(newRow[key]))) {
-        newRow[key] = medians[column] as any;
+        newRow[key] = medians[column];
       }
     });
     return newRow;
@@ -148,9 +148,9 @@ export const treatOutliers = (data: AirQualityData[]): AirQualityData[] => {
         const upperBound = q3s[column] + 1.5 * iqrs[column];
         
         if (value < lowerBound) {
-          newRow[key] = lowerBound as any;
+          newRow[key] = lowerBound;
         } else if (value > upperBound) {
-          newRow[key] = upperBound as any;
+          newRow[key] = upperBound;
         }
       }
     });
@@ -188,9 +188,9 @@ export const normalizeData = (data: AirQualityData[]): AirQualityData[] => {
       if (value !== null && value !== undefined && !isNaN(value)) {
         const range = maxs[column] - mins[column];
         if (range !== 0) {
-          newRow[key] = ((value - mins[column]) / range) as any;
+          newRow[key] = ((value - mins[column]) / range);
         } else {
-          newRow[key] = 0 as any; // If min=max, set to 0
+          newRow[key] = 0; // If min=max, set to 0
         }
       }
     });

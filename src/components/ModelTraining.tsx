@@ -8,7 +8,19 @@ import { toast } from "sonner";
 import { ProcessedData, ModelResults } from "@/types";
 import { trainRandomForestModel, trainXGBoostModel } from "@/utils/modelUtils";
 import { trainTestSplit } from "@/utils/dataProcessing";
-import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
+import {
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  TooltipProps
+} from "recharts";
+
+// Import necessary types for Recharts
+import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
 
 interface ModelTrainingProps {
   data: ProcessedData[];
@@ -84,6 +96,14 @@ const ModelTraining: React.FC<ModelTrainingProps> = ({ data, onModelsTrained }) 
     return [
       { name: "R²", RandomForest: randomForestResults.r2, XGBoost: xgboostResults.r2 }
     ];
+  };
+
+  // Helper function to safely format tooltip values
+  const formatTooltipValue = (value: ValueType) => {
+    if (typeof value === 'number') {
+      return value.toFixed(4);
+    }
+    return value;
   };
 
   return (
@@ -172,7 +192,9 @@ const ModelTraining: React.FC<ModelTrainingProps> = ({ data, onModelsTrained }) 
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="name" />
                       <YAxis />
-                      <Tooltip formatter={(value) => [value.toFixed(4), '']} />
+                      <Tooltip formatter={(value: ValueType) => {
+                        return [typeof value === 'number' ? value.toFixed(4) : value, ''];
+                      }} />
                       <Bar dataKey="RandomForest" name="Random Forest" fill="#3b82f6" />
                       <Bar dataKey="XGBoost" name="XGBoost" fill="#10b981" />
                     </BarChart>
@@ -191,7 +213,9 @@ const ModelTraining: React.FC<ModelTrainingProps> = ({ data, onModelsTrained }) 
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="name" />
                       <YAxis domain={[0, 1]} />
-                      <Tooltip formatter={(value) => [value.toFixed(4), '']} />
+                      <Tooltip formatter={(value: ValueType) => {
+                        return [typeof value === 'number' ? value.toFixed(4) : value, ''];
+                      }} />
                       <Bar dataKey="RandomForest" name="Random Forest" fill="#3b82f6" />
                       <Bar dataKey="XGBoost" name="XGBoost" fill="#10b981" />
                     </BarChart>

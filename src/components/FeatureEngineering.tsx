@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -16,8 +15,12 @@ import {
   Legend,
   ScatterChart,
   Scatter,
-  Cell
+  Cell,
+  TooltipProps
 } from "recharts";
+
+// Import necessary types for Recharts
+import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
 
 interface FeatureEngineeringProps {
   originalData: ProcessedData[];
@@ -96,6 +99,14 @@ const FeatureEngineering: React.FC<FeatureEngineeringProps> = ({ originalData, p
     return dayNames[day];
   };
 
+  // Helper function to safely format tooltip values
+  const formatTooltipValue = (value: ValueType) => {
+    if (typeof value === 'number') {
+      return value.toFixed(3);
+    }
+    return value;
+  };
+
   return (
     <Card className="w-full">
       <CardHeader>
@@ -161,7 +172,9 @@ const FeatureEngineering: React.FC<FeatureEngineeringProps> = ({ originalData, p
                   />
                   <YAxis domain={[0, 1]} />
                   <Tooltip
-                    formatter={(value) => [`${value.toFixed(3)}`, 'PM2.5/PM10 Ratio']}
+                    formatter={(value: ValueType) => {
+                      return [typeof value === 'number' ? value.toFixed(3) : value, 'PM2.5/PM10 Ratio'];
+                    }}
                     labelFormatter={(label) => `Date: ${new Date(label).toLocaleDateString()}`}
                   />
                   <Line
@@ -217,7 +230,9 @@ const FeatureEngineering: React.FC<FeatureEngineeringProps> = ({ originalData, p
                   />
                   <YAxis />
                   <Tooltip
-                    formatter={(value) => [`${value.toFixed(2)}`, '']}
+                    formatter={(value: ValueType) => {
+                      return [typeof value === 'number' ? value.toFixed(2) : value, ''];
+                    }}
                     labelFormatter={(label) => `Date: ${new Date(label).toLocaleDateString()}`}
                   />
                   <Legend />
@@ -257,7 +272,9 @@ const FeatureEngineering: React.FC<FeatureEngineeringProps> = ({ originalData, p
                   />
                   <YAxis />
                   <Tooltip
-                    formatter={(value) => [`${value.toFixed(2)}`, '']}
+                    formatter={(value: ValueType) => {
+                      return [typeof value === 'number' ? value.toFixed(2) : value, ''];
+                    }}
                     labelFormatter={(label) => `Date: ${new Date(label).toLocaleDateString()}`}
                   />
                   <Legend />
