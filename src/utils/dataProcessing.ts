@@ -1,3 +1,4 @@
+
 import { AirQualityData, ProcessedData, DatasetStats } from "@/types";
 
 /**
@@ -79,7 +80,7 @@ export const imputeMissingValues = (data: AirQualityData[]): AirQualityData[] =>
     numericColumns.forEach(column => {
       const key = column as keyof AirQualityData;
       if (newRow[key] === null || newRow[key] === undefined || isNaN(Number(newRow[key]))) {
-        newRow[key] = medians[column];
+        (newRow[key] as number) = medians[column];
       }
     });
     return newRow;
@@ -148,9 +149,9 @@ export const treatOutliers = (data: AirQualityData[]): AirQualityData[] => {
         const upperBound = q3s[column] + 1.5 * iqrs[column];
         
         if (value < lowerBound) {
-          newRow[key] = lowerBound;
+          (newRow[key] as number) = lowerBound;
         } else if (value > upperBound) {
-          newRow[key] = upperBound;
+          (newRow[key] as number) = upperBound;
         }
       }
     });
@@ -188,9 +189,9 @@ export const normalizeData = (data: AirQualityData[]): AirQualityData[] => {
       if (value !== null && value !== undefined && !isNaN(value)) {
         const range = maxs[column] - mins[column];
         if (range !== 0) {
-          newRow[key] = ((value - mins[column]) / range);
+          (newRow[key] as number) = ((value - mins[column]) / range);
         } else {
-          newRow[key] = 0; // If min=max, set to 0
+          (newRow[key] as number) = 0; // If min=max, set to 0
         }
       }
     });

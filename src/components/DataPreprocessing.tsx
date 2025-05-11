@@ -98,7 +98,7 @@ const DataPreprocessing: React.FC<DataPreprocessingProps> = ({ data, onComplete 
     }, 500);
   };
   
-  // Display a preview of the data
+  // Display a preview of the data with safe handling of undefined values
   const renderDataPreview = () => {
     const previewData = currentData.slice(0, 5);
     
@@ -118,10 +118,10 @@ const DataPreprocessing: React.FC<DataPreprocessingProps> = ({ data, onComplete 
             {previewData.map((row, i) => (
               <tr key={i} className="hover:bg-gray-50">
                 <td className="px-2 py-2 whitespace-nowrap text-sm">{row.Date}</td>
-                <td className="px-2 py-2 whitespace-nowrap text-sm">{row.PM25.toFixed(2)}</td>
-                <td className="px-2 py-2 whitespace-nowrap text-sm">{row.PM10.toFixed(2)}</td>
-                <td className="px-2 py-2 whitespace-nowrap text-sm">{row.NO2.toFixed(2)}</td>
-                <td className="px-2 py-2 whitespace-nowrap text-sm">{row.AQI.toFixed(2)}</td>
+                <td className="px-2 py-2 whitespace-nowrap text-sm">{typeof row.PM25 === 'number' ? row.PM25.toFixed(2) : 'N/A'}</td>
+                <td className="px-2 py-2 whitespace-nowrap text-sm">{typeof row.PM10 === 'number' ? row.PM10.toFixed(2) : 'N/A'}</td>
+                <td className="px-2 py-2 whitespace-nowrap text-sm">{typeof row.NO2 === 'number' ? row.NO2.toFixed(2) : 'N/A'}</td>
+                <td className="px-2 py-2 whitespace-nowrap text-sm">{typeof row.AQI === 'number' ? row.AQI.toFixed(2) : 'N/A'}</td>
               </tr>
             ))}
           </tbody>
