@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,21 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Custom colors for AQI data visualization
+				aqi: {
+					good: '#4ade80', // green
+					moderate: '#facc15', // yellow
+					unhealthy: '#f97316', // orange 
+					hazardous: '#ef4444', // red
+				},
+				chart: {
+					pm25: '#3b82f6', // blue
+					pm10: '#8b5cf6', // purple
+					no2: '#f43f5e', // pink
+					o3: '#10b981', // emerald
+					so2: '#f59e0b', // amber
+					co: '#6b7280', // gray
 				}
 			},
 			borderRadius: {
